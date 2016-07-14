@@ -1,0 +1,50 @@
+version: '2'
+
+volumes:
+  volume_mysql:
+    driver: local
+  volume_redis:
+    driver: local
+
+networks:
+  local-network:
+    driver: bridge
+
+services:
+  mysql_server:
+    image: mysql:5.7
+    volumes:
+        - ./conf/mysql:/etc/mysql/conf.d
+        - volume_mysql:/var/lib/mysql
+    environment:
+        MYSQL_ROOT_PASSWORD: passwd
+        MYSQL_DATABASE: test
+    networks:
+      - local-network
+
+  redis_server:
+    image: redis:latest
+    volumes:
+      - volume_redis:/data
+    networks:
+      - local-network
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+        - ./www:/www:ro
+        - ./conf/nginx:/etc/nginx/conf.d:ro
+    networks:
+      - local-network
+
+  phpfpm:
+    image: khanhicetea/php7-fpm-docker
+    volumes:
+        - ./www:/www
+    working_dir: /www
+    tty: true
+    stdin_open: true
+    networks:
+      - local-network
