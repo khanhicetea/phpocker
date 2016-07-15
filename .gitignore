@@ -64,5 +64,4 @@ $RECYCLE.BIN/
 
 # www data
 public_html/*
-!public_html/test/phpinfo.php
 !public_html/index.html
