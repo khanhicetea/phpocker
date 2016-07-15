@@ -5,6 +5,8 @@ volumes:
     driver: local
   volume_redis:
     driver: local
+  volume_composer_cache:
+    driver: local
 
 networks:
   local-network:
@@ -31,25 +33,27 @@ services:
       - local-network
 
   nginx:
-    build: ./nginx
+    image: phpocker_nginx:latest
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
     ports:
       - "80:80"
     volumes:
-        - ./www:/www
+        - ./public_html:/www
     networks:
       - local-network
 
   phpfpm:
-    image: php7fpm:latest
+    image: phpocker_php7fpm:latest
     build:
       context: ./php
       dockerfile: Dockerfile
       args:
         GITHUB_TOKEN: secret_token
     volumes:
-        - ./www:/www
+        - ./public_html:/www
+        - volume_composer_cache:/root/.composer/cache
     working_dir: /www
-    tty: true
-    stdin_open: true
     networks:
       - local-network
