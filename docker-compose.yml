@@ -40,7 +40,8 @@ services:
     ports:
       - "80:80"
     volumes:
-        - ./public_html:/www
+      - ./nginx/vhosts.conf:/etc/nginx/conf.d/vhosts.conf
+      - ./public_html:/www
     networks:
       - local-network
 
