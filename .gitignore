@@ -65,3 +65,7 @@ $RECYCLE.BIN/
 # www data
 public_html/*
 !public_html/index.html
+
+# Nginx
+nginx/vhosts.conf
+
